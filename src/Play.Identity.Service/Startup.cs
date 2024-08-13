@@ -13,6 +13,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Play.Common.Settings;
 using Play.Identity.Service.Entities;
+using Play.Identity.Service.Settings;
 
 
 
@@ -34,10 +35,23 @@ namespace Play.Identity.Service
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             var serviceSettings = Configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
             var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+            var identityServerSettings = Configuration.GetSection(nameof(IdentityServerSettings)).Get<IdentityServerSettings>();
 
             services.AddDefaultIdentity<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>(mongoDbSettings.ConnectionString, serviceSettings.ServiceName);
+
+            services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseSuccessEvents = true;
+                options.Events.RaiseFailureEvents = true; //set to true, helps with debugging
+                options.Events.RaiseErrorEvents = true; //set to true, helps with debugging
+
+            })
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddInMemoryApiScopes(identityServerSettings.ApiScopes)
+                .AddInMemoryClients(identityServerSettings.Clients)
+                .AddInMemoryIdentityResources(identityServerSettings.IdentityResources);
 
             services.AddControllers(options =>
             {
@@ -65,6 +79,8 @@ namespace Play.Identity.Service
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseIdentityServer(); //  order is important
 
             app.UseAuthorization();
 
