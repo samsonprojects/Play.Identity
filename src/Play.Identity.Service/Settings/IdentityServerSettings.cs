@@ -17,6 +17,7 @@ namespace Play.Identity.Service.Settings
         public IReadOnlyCollection<IdentityResource> IdentityResources => new IdentityResource[]{
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
+            new IdentityResource("roles", new []{"role"})
         };
 
 
