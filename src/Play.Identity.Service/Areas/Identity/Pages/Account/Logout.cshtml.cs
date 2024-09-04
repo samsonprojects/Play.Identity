@@ -2,25 +2,41 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
+
 using System.Threading.Tasks;
+using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Play.Identity.Service.Entities;
+
 
 namespace Play.Identity.Service.Areas.Identity.Pages.Account
 {
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
+        private readonly IIdentityServerInteractionService _interaction;
 
-        public LogoutModel(SignInManager<IdentityUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger, IIdentityServerInteractionService interaction)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _interaction = interaction;
+        }
+
+        public async Task<IActionResult> OnGet(string logoutId)
+        {
+            var context = await _interaction.GetLogoutContextAsync(logoutId);
+            //gives us context which allows us to verify if we are good to sign out 
+            if (context?.ShowSignoutPrompt == false)
+            {
+                return await this.OnPost(context.PostLogoutRedirectUri);
+            }
+            return Page();
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
@@ -29,7 +45,7 @@ namespace Play.Identity.Service.Areas.Identity.Pages.Account
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {
-                return LocalRedirect(returnUrl);
+                return Redirect(returnUrl);
             }
             else
             {
