@@ -10,7 +10,7 @@ namespace Play.Identity.Service.Exceptions
         public Guid _userId;
         public decimal _gilToDebit;
 
-        public InsufficientFundsException(Guid userId, decimal gilToDebit) : base($"not enough gil to debit{gilToDebit}")
+        public InsufficientFundsException(Guid userId, decimal gilToDebit) : base($"not enough gil to debit{gilToDebit} by user:{userId}")
         {
             this._userId = userId;
             this._gilToDebit = gilToDebit;

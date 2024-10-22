@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GreenPipes;
-using MassTransit.MultiBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +11,6 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Play.Common.MassTransit;
 using Play.Common.Service.Settings;
-using Play.Common.Settings;
 using Play.Identity.Service.Entities;
 using Play.Identity.Service.Exceptions;
 using Play.Identity.Service.HostedServices;
