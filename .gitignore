@@ -482,3 +482,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+src/Play.Identity.Contracts/obj/project.assets.json
+*.pdb
+*.dll
+*.dll
+
