@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using GreenPipes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,6 +61,7 @@ namespace Play.Identity.Service
                 options.Events.RaiseSuccessEvents = true;
                 options.Events.RaiseFailureEvents = true; //set to true, helps with debugging
                 options.Events.RaiseErrorEvents = true; //set to true, helps with debugging
+                options.KeyManagement.KeyPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
             })
                 .AddAspNetIdentity<ApplicationUser>()
