@@ -5,7 +5,7 @@ Playground for netcore identity service
 ## Create and publish package
 
 ```linux
-version="1.0.2"
+version="1.0.3"
 owner="samsonprojects"
 gh_pat="[PAT HERE]"
 
@@ -34,6 +34,9 @@ docker build --secret id=GH_OWNER --secret id=GH_PAT -t play.identity:$version .
 ## Run the docker image and connect it with the same network as the mongodb and rabbitmq
 
 ```linux
-adminPass="[PASSWORD HERE]"
-docker run -it --rm -p 5002:5002 --name identity -e MongoDbSettings__Host=mongo -e RabbitMQSettings__Host=rabbitmq -e IdentitySettings__AdminUserPassword=$adminPass --network src_default play.identity:$version
+export adminPass="[PASSWORD HERE]"
+
+export cosmosDbConnString="[Details]"
+
+docker run -it --rm -p 5002:5002 --name identity -e MongoDbSettings__ConnectionString=$cosmosDbConnString -e RabbitMQSettings__Host=rabbitmq -e IdentitySettings__AdminUserPassword=$adminPass --network src_default play.identity:$version
 ```
